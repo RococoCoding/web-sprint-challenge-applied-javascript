@@ -24,11 +24,14 @@ axios.get("https://lambda-times-api.herokuapp.com/articles")
   .then(obj => {
     for (let i in obj.data.articles) {
       obj.data.articles[i].forEach(article => {
+        if (i === "node") {
+          article.subject = "node.js";
+        } else article.subject = i;
         document.querySelector(".cards-container").appendChild(ArticleMaker(article));
       })
     }
   })
-  .catch(err => console.log(err));
+  .catch(err => alert(`Something went wrong! We're working hard to fix it. We apologize for the inconvenience`));
 
 function ArticleMaker(article) {
   let card = document.createElement("div");
@@ -38,7 +41,7 @@ function ArticleMaker(article) {
   let img = document.createElement("img");
   let span = document.createElement("span");
 
-  card.classList.add("card");
+  card.classList.add("card", `${article.subject}`);
   headline.classList.add("headline");
   headline.textContent = `${article.headline}`;
   author.classList.add("author");
