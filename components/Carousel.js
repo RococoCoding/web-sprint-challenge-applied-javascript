@@ -22,3 +22,94 @@
     <div class="right-button"> > </div>
   </div>
 */
+const breeds = [
+  'mastiff',
+  'affenpinscher',
+  'australian',
+  'mexicanhairless',
+  'pug',
+  'samoyed',
+  'akita',
+  'bluetick',
+  'borzoi',
+  'shiba',
+  'whippet',
+  'vizsla'
+]
+
+
+function CarouselMaker() {
+  let parentDiv = document.createElement("div");
+  let leftBtnDiv = document.createElement("div");
+  let img1 = document.createElement("img");
+  let img2 = document.createElement("img");
+  let img3 = document.createElement("img");
+  let img4 = document.createElement("img");
+  let img5 = document.createElement("img");
+  let rightBtnDiv = document.createElement("div");
+
+  parentDiv.classList.add("carousel");
+  leftBtnDiv.classList.add("left-button");
+  leftBtnDiv.textContent = " < ";
+  leftBtnDiv.addEventListener("click", moveLeft);
+  rightBtnDiv.classList.add("right-button");
+  rightBtnDiv.textContent = " > ";
+  rightBtnDiv.addEventListener("click", moveRight);
+
+  img1.classList.add("car-img", "img1");
+  populateCarousel(img1);
+  img2.classList.add("car-img", "img2");
+  populateCarousel(img2);
+  img3.classList.add("car-img", "img3");
+  populateCarousel(img3);
+  img4.classList.add("car-img", "img4");
+  populateCarousel(img4);
+  img5.classList.add("car-img", "img5");
+  populateCarousel(img5);
+
+  parentDiv.appendChild(leftBtnDiv);
+  parentDiv.appendChild(img1);
+  parentDiv.appendChild(img2);
+  parentDiv.appendChild(img3);
+  parentDiv.appendChild(img4);
+  parentDiv.appendChild(img5);
+  parentDiv.appendChild(rightBtnDiv);
+
+  return parentDiv;
+}
+
+function getDogURL(node, breed) {
+  axios.get(`https://dog.ceo/api/breed/${breed}/images/random/1`)
+    .then(futureData => {
+      node.setAttribute("src", `${futureData.data.message[0]}`);
+    })
+  .catch(err => {console.log(err, "+++ERROR+++ OUT OF CHEESE +++ERROR+++")});
+}
+
+function populateCarousel(node) {
+  let breed = breeds[Math.floor(Math.random()*12)];
+  getDogURL(node, breed);
+}
+
+function moveLeft() {
+  let images = document.querySelectorAll(".car-img");
+  for (let i = 0; i < images.length; i++) { 
+    if (i === images.length-1) {
+      images[i].setAttribute("src", `${populateCarousel(images[i])}`);
+    } else images[i].setAttribute("src", `${images[i+1].src}`);
+  }
+}
+
+function moveRight() {
+  let images = document.querySelectorAll(".car-img");
+  for (let i = images.length-1; i >= 0; i--) { 
+    if (i-1 >= 0) {
+      images[i].setAttribute("src", `${images[i-1].src}`);
+    } else images[i].setAttribute("src", `${populateCarousel(images[i])}`);
+  }
+}
+
+document.querySelector(".carousel-container").appendChild(CarouselMaker());
+
+
+//++++get images+++++
